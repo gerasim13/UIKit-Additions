@@ -47,7 +47,9 @@
 
 - (void)setShadowColor:(UIColor*)color
 {
-    self.layer.masksToBounds = NO;
+    self.layer.masksToBounds   = NO;
+    self.layer.shouldRasterize = YES;
+    self.layer.rasterizationScale = [[UIScreen mainScreen] scale];
     self.layer.shadowColor = [color CGColor];
 }
 

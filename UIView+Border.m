@@ -26,7 +26,9 @@
 - (void)setBorderColor:(UIColor*)color
 {
     if (color) {
-        self.layer.masksToBounds = YES;
+        self.layer.masksToBounds   = YES;
+        self.layer.shouldRasterize = YES;
+        self.layer.rasterizationScale = [[UIScreen mainScreen] scale];
         self.layer.borderColor = [color CGColor];
     }
 }
