@@ -7,6 +7,7 @@
 //
 
 #import "UIViewController+Blocks.h"
+#import "CUMacros.h"
 
 @implementation UIViewController (Blocks)
 

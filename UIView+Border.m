@@ -33,7 +33,7 @@
     }
 }
 
-- (UIColor*)borderColor
+- (__weak UIColor*)borderColor
 {
     return [UIColor colorWithCGColor:self.layer.borderColor];
 }

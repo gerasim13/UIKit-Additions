@@ -7,29 +7,44 @@
 //
 
 #import "UIView+Gradient.h"
+#import "UIView+RoundedCorners.h"
+#import "UIView+Border.h"
+#import "NSObject+Swizzle.h"
 #import <QuartzCore/QuartzCore.h>
 
 @implementation UIView (Gradient)
 @dynamic gradientColor;
 @dynamic gradientLayer;
 
-- (CAGradientLayer*)gradientLayer
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [self swizzleMethod:@selector(layoutSubviews) withMethod:@selector(layoutSubviews_gradient)];
+    });
+}
+
+- (void)layoutSubviews_gradient
+{
+    [self layoutSubviews_gradient];
+    [[self gradientLayer] setFrame:self.bounds];
+}
+
+- (__weak CAGradientLayer*)gradientLayer
 {
     for (CALayer *layer in [self.layer sublayers]) {
         if ([layer isKindOfClass:[CAGradientLayer class]]) {
-            CAGradientLayer *gradient = (CAGradientLayer*)layer;
-            return gradient;
+            return (CAGradientLayer*)layer;
         }
     }
     return nil;
 }
 
-- (UIColor*)gradientColor
+- (__weak UIColor*)gradientColor
 {
-    CAGradientLayer *gradient = [self gradientLayer];
+    __weak CAGradientLayer *gradient = [self gradientLayer];
     if (gradient) {
-        id colorRef = (gradient.colors)[1];
-        UIColor *color = [UIColor colorWithCGColor:(__bridge CGColorRef)(colorRef)];
+        id colorRef = gradient.colors[1];
+        UIColor *color = [UIColor colorWithCGColor:(__bridge CGColorRef)colorRef];
         if (color) {
             return color;
         }
@@ -43,6 +58,8 @@
         self.layer.masksToBounds   = YES;
         self.layer.shouldRasterize = YES;
         self.layer.rasterizationScale = [[UIScreen mainScreen] scale];
+        self.layer.needsDisplayOnBoundsChange = YES;
+        
         CAGradientLayer *gradient = [self gradientLayer];
         if (!gradient) {
             gradient = [CAGradientLayer layer];
@@ -50,6 +67,7 @@
         
         gradient.frame = self.bounds;
         gradient.colors = @[(id)[self.backgroundColor CGColor], (id)[color CGColor]];
+        
         [self.layer insertSublayer:gradient atIndex:0];
     }
 }
