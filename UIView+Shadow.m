@@ -53,9 +53,10 @@
     self.layer.shadowColor = [color CGColor];
 }
 
-- (__weak UIColor*)shadowColor
+- (__autoreleasing UIColor*)shadowColor
 {
-    return [UIColor colorWithCGColor:self.layer.shadowColor];
+    __autoreleasing UIColor *color = [UIColor colorWithCGColor:self.layer.shadowColor];
+    return color;
 }
 
 @end

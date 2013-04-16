@@ -29,22 +29,24 @@
     [[self gradientLayer] setFrame:self.bounds];
 }
 
-- (__weak CAGradientLayer*)gradientLayer
+- (__autoreleasing CAGradientLayer*)gradientLayer
 {
     for (CALayer *layer in [self.layer sublayers]) {
-        if ([layer isKindOfClass:[CAGradientLayer class]]) {
-            return (CAGradientLayer*)layer;
+        @autoreleasepool {
+            if ([layer isKindOfClass:[CAGradientLayer class]]) {
+                return (CAGradientLayer*)layer;
+            }
         }
     }
     return nil;
 }
 
-- (__weak UIColor*)gradientColor
+- (__autoreleasing UIColor*)gradientColor
 {
-    __weak CAGradientLayer *gradient = [self gradientLayer];
+    __autoreleasing CAGradientLayer *gradient = [self gradientLayer];
     if (gradient) {
         id colorRef = gradient.colors[1];
-        UIColor *color = [UIColor colorWithCGColor:(__bridge CGColorRef)colorRef];
+        __autoreleasing UIColor *color = [UIColor colorWithCGColor:(__bridge CGColorRef)colorRef];
         if (color) {
             return color;
         }

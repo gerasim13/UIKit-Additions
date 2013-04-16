@@ -33,9 +33,10 @@
     }
 }
 
-- (__weak UIColor*)borderColor
+- (__autoreleasing UIColor*)borderColor
 {
-    return [UIColor colorWithCGColor:self.layer.borderColor];
+    __autoreleasing UIColor *color = [UIColor colorWithCGColor:self.layer.borderColor];
+    return color;
 }
 
 @end
